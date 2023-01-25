@@ -7,6 +7,12 @@
     <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
     <button @click="send" v-if="connected">SEND</button>
   </div>
+
+  <div>
+    <ul>
+        <li v-for="user in users" :key="user">{{ user }}</li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
@@ -22,6 +28,7 @@ let socket;
 const connected = ref(false);
 const typing = ref(false);
 const typingValue = ref("")
+const users = ref([])
 
 
 
@@ -57,6 +64,9 @@ function connectToServer(nickname) {
   socket.on("message", (data) => {
     console.log(data, "<<<<");
     addToChat(data.message);
+  });
+  socket.on("updateUsers", (data) => {
+    users.value = data;
   });
 }
 </script>

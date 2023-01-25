@@ -4,6 +4,7 @@ import { defineNuxtModule } from "@nuxt/kit";
 const userMap = {
   // map socket.id to user nick
 };
+let users = []
 
 let count =0;
 function buildMessage(who, what) {
@@ -27,8 +28,10 @@ export default defineNuxtModule({
         console.log('Connection', socket.id);
         socket.on('join', (data) => {
           socket.nickname = data.nickname;
+          users.push(socket.nickname);
           socket.emit('message', buildMessage(socket, `welcome ${socket.nickname}`));
           socket.broadcast.emit('message', buildMessage(socket, `${socket.nickname} joined`));
+          io.emit('updateUsers', users);
         });
         socket.on('typing', (nickname) => {
           socket.broadcast.emit('message', buildMessage(socket, `${nickname} is typing...`));
