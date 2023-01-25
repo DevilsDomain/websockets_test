@@ -3,7 +3,8 @@
     <NicknameForm @submit="connectToServer" v-if="!connected"/>
     <ChatLog :chat-log="chatLog" v-if="connected" />
 
-    <input v-model="text" @keyup.enter="send" class="border border-gray-100" v-if="connected"/>
+    <!-- @blur="stopTyping(nickname)" -->
+    <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
     <button @click="send" v-if="connected">SEND</button>
   </div>
 </template>
@@ -19,6 +20,9 @@ const text = ref("");
 const nickname = ref(""); 
 let socket;
 const connected = ref(false);
+const typing = ref(false);
+const typingValue = ref("")
+
 
 
 function addToChat(m) {
@@ -30,6 +34,21 @@ function send() {
   addToChat(text.value); // optimistic UI
   text.value = "";
 }
+
+function startTyping(nickname) {
+  typingValue.value = text.value
+  typing.value = true;
+  socket.emit("typing", nickname);
+}
+
+// propably not useful to display that the user stopped typing after they have sent the message, but up to preference.
+
+function stopTyping(nickname) {
+  typingValue.value = ""
+  typing.value = false;
+  socket.emit("stop_typing", nickname);
+}
+
 function connectToServer(nickname) {
   socket = io(config.public.wssUrl);
   socket.emit('join', { id: socket.id, nickname: nickname });

@@ -30,6 +30,13 @@ export default defineNuxtModule({
           socket.emit('message', buildMessage(socket, `welcome ${socket.nickname}`));
           socket.broadcast.emit('message', buildMessage(socket, `${socket.nickname} joined`));
         });
+        socket.on('typing', (nickname) => {
+          socket.broadcast.emit('message', buildMessage(socket, `${nickname} is typing...`));
+        });
+        // propably not useful to display that the user stopped typing after they have sent the message, but up to preference.
+          socket.on('stop_typing', (nickname) => {
+          socket.broadcast.emit('message', buildMessage(socket, `${nickname} stopped typing`));
+        });
       });
 
       io.on("connect", (socket) => {
