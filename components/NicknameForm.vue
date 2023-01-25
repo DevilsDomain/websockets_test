@@ -1,6 +1,6 @@
 <template>
     <div>
-      <input v-model="nickname" placeholder="Enter your nickname" class="border border-gray-100" />
+      <input v-model="nickname" @keyup.enter="submitNickname" placeholder="Enter your nickname" class="border border-gray-100" />
       <button @click="submitNickname">Join Chat</button>
     </div>
   </template>
