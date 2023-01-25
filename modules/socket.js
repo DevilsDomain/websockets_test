@@ -4,7 +4,7 @@ import { defineNuxtModule } from "@nuxt/kit";
 const userMap = {
   // map socket.id to user nick
 };
-let users = []
+let users = {}
 
 let count =0;
 function buildMessage(who, what) {
@@ -28,7 +28,7 @@ export default defineNuxtModule({
         console.log('Connection', socket.id);
         socket.on('join', (data) => {
           socket.nickname = data.nickname;
-          users.push(socket.nickname);
+          users[socket.nickname] = {status: true};
           socket.emit('message', buildMessage(socket, `welcome ${socket.nickname}`));
           socket.broadcast.emit('message', buildMessage(socket, `${socket.nickname} joined`));
           io.emit('updateUsers', users);
@@ -51,7 +51,9 @@ export default defineNuxtModule({
 
         socket.on("disconnecting", () => {
           console.log("disconnected", socket.id);
+          users[socket.nickname] = false;
           socket.broadcast.emit('message', buildMessage(socket, `${socket.nickname} left`));
+          io.emit('updateUsers', users);
         });
       });
     });

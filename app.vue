@@ -6,12 +6,13 @@
     <!-- @blur="stopTyping(nickname)" -->
     <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
     <button @click="send" v-if="connected">SEND</button>
+
+    <div>
+    <ul>
+      <li v-for="user in connectedUsers" :key="user">{{ user }}</li>
+    </ul>
   </div>
 
-  <div>
-    <ul>
-        <li v-for="user in users" :key="user">{{ user }}</li>
-    </ul>
   </div>
 </template>
 
@@ -19,8 +20,9 @@
 // const { $socket } = useNuxtApp();
 import io from "socket.io-client";
 import ChatLog from "./components/ChatLog.vue";
-const config = useRuntimeConfig();
+import { ref, computed } from 'vue'
 
+const config = useRuntimeConfig();
 const chatLog = ref("");
 const text = ref("");
 const nickname = ref(""); 
@@ -28,8 +30,7 @@ let socket;
 const connected = ref(false);
 const typing = ref(false);
 const typingValue = ref("")
-const users = ref([])
-
+const users = ref({});
 
 
 function addToChat(m) {
@@ -48,7 +49,7 @@ function startTyping(nickname) {
   socket.emit("typing", nickname);
 }
 
-// propably not useful to display that the user stopped typing after they have sent the message, but up to preference.
+
 
 function stopTyping(nickname) {
   typingValue.value = ""
@@ -69,4 +70,10 @@ function connectToServer(nickname) {
     users.value = data;
   });
 }
+
+
+const connectedUsers = computed(() => {
+  return users.value ? Object.entries(users.value).filter(([user, status]) => status).map(([user]) => user) : []
+});
+
 </script>
