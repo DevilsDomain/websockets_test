@@ -3,7 +3,6 @@
     <NicknameForm @submit="connectToServer" v-if="!connected"/>
     <ChatLog :chat-log="chatLog" v-if="connected" />
 
-    <!-- @blur="stopTyping(nickname)" -->
     <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
     <button @click="send" v-if="connected">SEND</button>
 
@@ -34,6 +33,9 @@ const users = ref({});
 
 
 function addToChat(m) {
+  if (m.startsWith("http") || m.startsWith("www")) {
+    m = `<a href="${m}" target="_blank">${m}</a>`;
+  }
   chatLog.value += `<div>${m}</div>`;
 }
 
