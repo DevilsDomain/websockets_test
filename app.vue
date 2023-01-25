@@ -1,9 +1,10 @@
 <template>
   <div>
-    <ChatLog :chat-log="chatLog" />
+    <NicknameForm @submit="connectToServer" />
+    <ChatLog :chat-log="chatLog" v-if="connected" />
 
-    <input v-model="text" @keyup.enter="send" class="border border-gray-100" />
-    <button @click="send">SEND</button>
+    <input v-model="text" @keyup.enter="send" class="border border-gray-100" v-if="connected"/>
+    <button @click="send" v-if="connected">SEND</button>
   </div>
 </template>
 
@@ -15,7 +16,10 @@ const config = useRuntimeConfig();
 
 const chatLog = ref("");
 const text = ref("");
+const nickname = ref('');
 let socket;
+const connected = ref(false);
+
 
 function addToChat(m) {
   chatLog.value += `<div>${m}</div>`;
@@ -26,12 +30,14 @@ function send() {
   addToChat(text.value); // optimistic UI
   text.value = "";
 }
-onMounted(() => {
-  socket = io(config.public.wssUrl); // "http://192.168.20.31:3000");
+function connectToServer(nickname) {
+  socket = io(config.public.wssUrl);
+  socket.emit('join', { id: socket.id, nickname: nickname.value });
+  connected.value = true;
 
   socket.on("message", (data) => {
     console.log(data, "<<<<");
     addToChat(data.message);
   });
-});
+}
 </script>
