@@ -32,7 +32,7 @@ function send() {
 }
 function connectToServer(nickname) {
   socket = io(config.public.wssUrl);
-  socket.emit('join', { id: socket.id, nickname: nickname.value });
+  socket.emit('join', { id: socket.id, nickname: nickname });
   connected.value = true;
 
   socket.on("message", (data) => {
