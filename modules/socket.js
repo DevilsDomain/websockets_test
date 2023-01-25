@@ -31,12 +31,6 @@ export default defineNuxtModule({
       });
 
       io.on("connect", (socket) => {
-        socket.emit('message', buildMessage(socket, `welcome ${socket.nickname}`));
-        socket.broadcast.emit('message', buildMessage(socket, `${socket.nickname} joined`));
-        // socket.broadcast.emit(
-        //   "message",
-        //   buildMessage(socket, `${socket.id} joined`)
-        // );
 
         socket.on("message", function message(data) {
           console.log("message received: %s", data);
