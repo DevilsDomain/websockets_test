@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NicknameForm @submit="connectToServer" />
+    <NicknameForm @submit="connectToServer" v-if="!connected"/>
     <ChatLog :chat-log="chatLog" v-if="connected" />
 
     <input v-model="text" @keyup.enter="send" class="border border-gray-100" v-if="connected"/>
@@ -16,7 +16,7 @@ const config = useRuntimeConfig();
 
 const chatLog = ref("");
 const text = ref("");
-const nickname = ref('');    // when removed the client wont see their username when they send the messages, up to preference tbh.
+const nickname = ref(""); 
 let socket;
 const connected = ref(false);
 
