@@ -5,11 +5,13 @@ const userMap = {
   // map socket.id to user nick
 };
 
+let count =0;
 function buildMessage(who, what) {
   // convert to POJO (Plain Old Javascript Object)
   // information sent thru the socket has to be able to be stringified & parsed
   // (JSON.stringify, JSON.parse)
-  return { id: "1", message: who.nickname + ': ' + what };
+  count = count + 1
+  return { id: count, message: who.nickname + ': ' + what };
 
 }
 

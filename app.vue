@@ -16,7 +16,7 @@ const config = useRuntimeConfig();
 
 const chatLog = ref("");
 const text = ref("");
-const nickname = ref('');
+const nickname = ref('');    // when removed the client wont see their username when they send the messages, up to preference tbh.
 let socket;
 const connected = ref(false);
 
