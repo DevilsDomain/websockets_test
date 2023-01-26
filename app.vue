@@ -1,19 +1,40 @@
 <template>
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+  </head>
   <div>
-    <NicknameForm @submit="connectToServer" v-if="!connected"/>
-    <ChatLog :chat-log="chatLog" v-if="connected" />
-
-    <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
-    <input type="file" @change="handleFileUpload" id="file-input" v-if="connected"/>
-    <button @click="send" v-if="connected">SEND</button>
-
-    <div>
-    <ul>
-      <li v-for="user in connectedUsers" :key="user">{{ user }}</li>
-    </ul>
+    <!-- login -->
+    <div class="flex justify-center flex h-screen bg-color" v-if="!connected">
+      <img src="~/assets/vectors/top.svg" alt="" class="absolute z-index scale blur-3xl top-blob">
+      <div class="grid justify-items-center m-auto">
+        <h1>CHAT</h1>
+        <h3>ENTER A USER NAME TO JOIN</h3>
+        <NicknameForm @submit="connectToServer"/>
+      </div>
+      <img src="~/assets/vectors/bot.svg" alt="" class="absolute z-index scale blur-3xl bot-blob">
+    </div>
+    <!-- login -->
+    <!-- chat-log -->
+    <div v-if="connected">
+      <h1>CHAT</h1>
+      <div class="flex flex-row gap-4">
+        <div class="size border border-black	border-2">
+          <h4>ONLINE</h4>
+          <ul>
+            <li v-for="user in connectedUsers" :key="user">{{ user }}</li>
+          </ul>
+        </div>
+        
+        <ChatLog :chat-log="chatLog"/>
+      </div>
+    </div>
+      <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
+      <!-- <input type="file" @change="handleFileUpload" id="file-input" v-if="connected"/> -->
+      <button @click="send" v-if="connected">SEND</button>
+  
+    <!-- chat-log -->
   </div>
 
-  </div>
 </template>
 
 <script setup>
@@ -77,20 +98,56 @@ function connectToServer(nickname) {
   });
 }
 
-// function handleFileUpload(e) {
-//   const file = e.target.files[0];
-//   const reader = new FileReader();
-//   reader.readAsDataURL(file);
-//   reader.onload = () => {
-//     socket.emit("image", reader.result);
-//   };
-// }
-// reader.onload = () => {
-//     socket.emit("image", reader.result);
-// };
-
 const connectedUsers = computed(() => {
   return users.value ? Object.entries(users.value).filter(([user, status]) => status).map(([user]) => user) : []
 });
 
 </script>
+<style scoped>
+* {
+  z-index: 1;
+}
+h1 {
+  font-size: 143px;
+  line-height: 174px;
+}
+
+h3 {
+  font-size: 30px;
+  font-weight: 300;
+  font-size: 30px;
+  line-height: 39px;
+  font-weight: 200;
+  letter-spacing: 0.635em;
+  padding-bottom: 40px;
+
+}
+.bg-color {
+  background-color: #EFEFEF;
+}
+
+.z-index {
+    z-index: 0;
+}
+
+.scale {
+  transform: scale();
+}
+
+.top-blob {
+  left: 120px;
+  top: 50px
+}
+
+.bot-blob {
+  bottom: 30px;
+  right: 100px;
+}
+
+.size {
+width: 198px;
+height: 576px;
+}
+
+
+</style>

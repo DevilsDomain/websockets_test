@@ -2,7 +2,7 @@
   <div
     ref="chatBox"
     v-html="chatLog"
-    class="m-4 p-2 overflow-scroll border border-black-100 max-h-20 h-20 min-h-20 max-w-20"
+    class="m-4 p-2 overflow-scroll border border-black	border-2 size "
   ></div>
 </template>
 <script setup>
@@ -21,3 +21,10 @@ watch(chatLog, () => {
   });
 });
 </script>
+<style scoped>
+
+.size {
+  width: 621px;
+  height: 576px;
+}
+</style>
