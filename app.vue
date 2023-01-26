@@ -4,6 +4,7 @@
     <ChatLog :chat-log="chatLog" v-if="connected" />
 
     <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
+    <input type="file" @change="handleFileUpload" id="file-input" v-if="connected"/>
     <button @click="send" v-if="connected">SEND</button>
 
     <div>
@@ -30,6 +31,9 @@ const connected = ref(false);
 const typing = ref(false);
 const typingValue = ref("")
 const users = ref({});
+// const reader = new FileReader();
+
+
 
 
 function addToChat(m) {
@@ -73,6 +77,17 @@ function connectToServer(nickname) {
   });
 }
 
+// function handleFileUpload(e) {
+//   const file = e.target.files[0];
+//   const reader = new FileReader();
+//   reader.readAsDataURL(file);
+//   reader.onload = () => {
+//     socket.emit("image", reader.result);
+//   };
+// }
+// reader.onload = () => {
+//     socket.emit("image", reader.result);
+// };
 
 const connectedUsers = computed(() => {
   return users.value ? Object.entries(users.value).filter(([user, status]) => status).map(([user]) => user) : []

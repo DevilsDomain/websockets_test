@@ -40,6 +40,10 @@ export default defineNuxtModule({
           socket.on('stop_typing', (nickname) => {
           socket.broadcast.emit('message', buildMessage(socket, `${nickname} stopped typing`));
         });
+        socket.on("image", function message(data) {
+          console.log("image received: %s", data);
+          socket.broadcast.emit("image", {id: count, message: socket.nickname + ' sent an image', image: data });
+        });
       });
 
       io.on("connect", (socket) => {
