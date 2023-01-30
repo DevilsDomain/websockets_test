@@ -17,20 +17,21 @@
     <!-- chat-log -->
     <div v-if="connected">
       <h1>CHAT</h1>
-      <div class="flex flex-row gap-4">
+      <div class="flex flex-row gap-4 container">
         <div class="size border border-black	border-2">
           <h4>ONLINE</h4>
           <ul>
             <li v-for="user in connectedUsers" :key="user">{{ user }}</li>
           </ul>
         </div>
-        
-        <ChatLog :chat-log="chatLog"/>
+        <div class="chat-p"><ChatLog :chat-log="chatLog"/></div>
       </div>
-    </div>
       <input v-model="text" @keyup.enter="send"  @focus="startTyping(nickname)" @blur="stopTyping(nickname)" class="border border-gray-100" v-if="connected"/>
       <!-- <input type="file" @change="handleFileUpload" id="file-input" v-if="connected"/> -->
       <button @click="send" v-if="connected">SEND</button>
+
+
+    </div>
   
     <!-- chat-log -->
   </div>
@@ -149,5 +150,15 @@ width: 198px;
 height: 576px;
 }
 
+.chat-p {
+  margin-top: -15px;
+  width: 621px;
+  height: 576px;
+}
+
+.container {
+  height: 600px;
+  width: 700px;
+}
 
 </style>
